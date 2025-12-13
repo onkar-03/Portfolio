@@ -102,7 +102,7 @@ const Contact = () => {
           </Rounded>
           <Rounded>
             <Link
-              href='/resume.pdf'
+              href='/public/onkar_patel_resume.pdf'
               download
               style={{ display: 'flex', alignItems: 'center', gap: '1em' }}
             >
