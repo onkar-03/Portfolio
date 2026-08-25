@@ -1,9 +1,11 @@
 @import 'tailwindcss';
 
 /* Font-Face Declarations */
+/* Custom local variable fonts imported from /public/fonts */
 @font-face {
   font-family: 'CabinetGrotesk-Variable';
-  src: url('/public/fonts/CabinetGrotesk-Variable.ttf') format('truetype');
+  src: url('/fonts/CabinetGrotesk-Variable.ttf')
+    format('truetype');
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
@@ -11,44 +13,66 @@
 
 @font-face {
   font-family: 'GeneralSans-Variable';
-  src: url('/public/fonts/GeneralSans-Variable.ttf') format('truetype');
+  src: url('/fonts/GeneralSans-Variable.ttf')
+    format('truetype');
   font-weight: 200 700;
   font-display: swap;
   font-style: normal;
 }
 
-:root {
-  /* default color palette */
-  --background: #ffffff; /* main background */
-  --foreground: #0e0e0e; /* primary text color */
-  --color-dark: #1c1d20; /* deep dark section backgrounds */
-  --color-border-light: rgba(0, 0, 0, 0.1); /* subtle border */
+/* Static Design Tokens (@theme) */
+/* Fixed brand colors and typography — Tailwind auto-injects them into :root and creates utility classes */
+@theme {
+  /* Typography */
+  --font-sans:
+    'GeneralSans-Variable', sans-serif;
+  --font-cabinet:
+    'CabinetGrotesk-Variable',
+    sans-serif;
 
-  /* grayscale / neutrals */
-  --color-gray-100: #f2f2f2; /* section alternate background */
-  --color-gray-200: #e6e6e6; /* subtle block separators */
-  --color-gray-300: #d9d9d9; /* light borders/dividers */
-  --color-gray-400: #666666; /* secondary text */
-  --color-gray-500: #4d4d4d; /* muted text */
-  --color-gray-600: #262626; /* footer / dark sections */
+  /* Dark Sections & Borders */
+  --color-dark: #1c1d20;
+  --color-border-light: rgba(
+    0,
+    0,
+    0,
+    0.1
+  );
 
-  /* accent color */
-  --color-accent: #0066ff; /* links, buttons, highlight */
+  /* Grayscale / Neutrals */
+  --color-gray-100: #f2f2f2;
+  --color-gray-200: #e6e6e6;
+  --color-gray-300: #d9d9d9;
+  --color-gray-400: #666666;
+  --color-gray-500: #4d4d4d;
+  --color-gray-600: #262626;
 
-  /* warm neutrals (optional) */
-  --color-warm-100: #fafaf9; /* hero background subtle off-white */
-  --color-warm-200: #e8e8e3; /* hover states */
-  --color-warm-300: #ddddd5; /* subtle dividers */
-  --color-warm-400: #d1d1c7; /* cards, projects blocks */
-  --color-warm-500: #aeae93; /* highlight details */
-  --color-warm-600: #8c8c73; /* muted warm text */
+  /* Accent Highlight */
+  --color-accent: #0066ff;
 
-  /* fonts */
-  --font-sans: 'GeneralSans-Variable', sans-serif;
-  --font-cabinet: 'CabinetGrotesk-Variable', sans-serif;
+  /* Warm Neutrals */
+  --color-warm-100: #fafaf9;
+  --color-warm-200: #e8e8e3;
+  --color-warm-300: #ddddd5;
+  --color-warm-400: #d1d1c7;
+  --color-warm-500: #aeae93;
+  --color-warm-600: #8c8c73;
 }
 
-/* Dark Mode Overrides */
+/* (@theme inline) -> Dynamic Theme Connector */
+/* Tailwind doesn't automatically know about :root variables, so this bridges them to utility classes without duplicating :root entries */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+/* (:root) -> Global Runtime CSS Variables */
+/* Global custom properties and runtime values that adapt dynamically across themes and media queries */
+:root {
+  --background: #ffffff;
+  --foreground: #0e0e0e;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -56,25 +80,52 @@
   }
 }
 
-/* Base Styles */
-body {
-  background: var(--foreground);
-  color: var(--background);
-  font-family: var(--font-sans);
-  margin: 0;
-  overflow-x: hidden;
-
-  /* overflow-y: hidden; */
-  /* No Scrollbar Hard Way */
-  /* overflow: hidden; */
+/* (@utility) -> Custom Utility Classes */
+/* Single-purpose reusable CSS classes for specific styling tasks across components */
+@utility text-stroke-2 {
+  -webkit-text-stroke-width: 2px;
 }
 
+@utility text-stroke-black {
+  -webkit-text-stroke-color: #000000;
+}
+
+@utility no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Base & Global Reset */
+/* Global layout defaults, body colors, text selection, and cross-browser scrollbar hiding */
 html,
-body {
-  height: 100%;
+body,
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* Hide scrollbar for Chrome, Safari, and Opera */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+}
+
+::selection {
+  background-color: #0e0e0e;
+  color: #ffffff;
+}
+
 ::-webkit-scrollbar {
   display: none;
 }
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
