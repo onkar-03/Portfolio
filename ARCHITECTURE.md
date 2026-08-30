@@ -71,10 +71,16 @@ sequenceDiagram
 ## 3. Directory Conventions & Cleanup Strategy
 
 ### Component File Naming
-Adopt `index.jsx` per component directory:
-- `components/Header/index.jsx` $\rightarrow$ imported cleanly as `import Header from '@/components/Header'`
-- `common/RoundedButton/index.jsx` $\rightarrow$ imported cleanly as `import RoundedButton from '@/common/RoundedButton'`
-- `common/Magnetic/index.jsx` $\rightarrow$ imported cleanly as `import Magnetic from '@/common/Magnetic'`
+Every component directory exposes `index.jsx`, imported via the `@/` alias:
+- `import Header from '@/components/Header'`
+- `import RoundedButton from '@/common/RoundedButton'`
+- `import Magnetic from '@/common/Magnetic'`
+
+### Styling
+All styling is Tailwind v4 utilities. `app/globals.css` is the only stylesheet and holds
+the `@font-face` rules, the `@theme` design tokens, and three `@utility` definitions
+(`text-stroke-2`, `text-stroke-black`, `underline-sweep`). There is no `tailwind.config.js` —
+v4 reads its configuration from the CSS itself.
 
 ---
 
@@ -99,28 +105,28 @@ flowchart TD
 - [x] **Stage 0: Global Setup & Tailwind Tokens**
   - [x] Configure Tailwind v4 `@theme` tokens in `app/globals.css` (custom colors, fonts, noise, utilities)
   - [x] Standardize `app/layout.jsx` fonts and metadata
-- [ ] **Stage 1: Common Primitives (`common/`)**
-  - [ ] `common/Magnetic` (Rename to `index.jsx`, ensure clean ref passing & cleanup)
-  - [ ] `common/RoundedButton` (Migrate SCSS to Tailwind utilities + GSAP fill animation)
-  - [ ] `common/LocalTime` (Tailwind typography & client time formatting)
-- [ ] **Stage 2: Header & Navigation (`components/Header/`)**
-  - [ ] `components/Header/navigation/Curve` (Tailwind SVG container)
-  - [ ] `components/Header/navigation/Link` (Tailwind hover & active indicators)
-  - [ ] `components/Header/navigation/Footer` (Tailwind social links)
-  - [ ] `components/Header/navigation` (Tailwind sliding drawer menu)
-  - [ ] `components/Header` (Tailwind sticky bar, magnetic logo, floating action burger)
-- [ ] **Stage 3: PreLoader (`components/PreLoader/`)**
-  - [ ] Migrate PreLoader overlay, cycling typography & SVG exit curve to Tailwind
-- [ ] **Stage 4: Landing / Hero Section (`components/Landing/`)**
-  - [ ] Migrate hero layout, text stroke outline, and GSAP scale animations to Tailwind
-- [ ] **Stage 5: Description / About Section (`components/Description/`)**
-  - [ ] Migrate masked text reveal and responsive layout to Tailwind
-- [ ] **Stage 6: Projects / Work Section (`components/Projects/`)**
-  - [ ] `components/Projects/Project` (Row hover states & GitHub/live links in Tailwind)
-  - [ ] `components/Projects` (Interactive modal preview & floating cursor follower in Tailwind)
-- [ ] **Stage 7: Contact & Footer Section (`components/Contact/`)**
-  - [ ] Migrate semicircular curve, CTA typography, resume download, and socials grid
-- [ ] **Stage 8: Main Page & Final Cleanup (`app/`)**
-  - [ ] Clean imports in `app/page.jsx`
-  - [ ] Delete legacy `.module.scss` files
-  - [ ] Run full build & lint verification
+- [x] **Stage 1: Common Primitives (`common/`)**
+  - [x] `common/Magnetic` (Rename to `index.jsx`, ensure clean ref passing & cleanup)
+  - [x] `common/RoundedButton` (Migrate SCSS to Tailwind utilities + GSAP fill animation)
+  - [x] `common/LocalTime` (Tailwind typography & client time formatting)
+- [x] **Stage 2: Header & Navigation (`components/Header/`)**
+  - [x] `components/Header/navigation/Curve` (Tailwind SVG container)
+  - [x] `components/Header/navigation/Link` (Tailwind hover & active indicators)
+  - [x] `components/Header/navigation/Footer` (Tailwind social links)
+  - [x] `components/Header/navigation` (Tailwind sliding drawer menu)
+  - [x] `components/Header` (Tailwind sticky bar, magnetic logo, floating action burger)
+- [x] **Stage 3: PreLoader (`components/PreLoader/`)**
+  - [x] Migrate PreLoader overlay, cycling typography & SVG exit curve to Tailwind
+- [x] **Stage 4: Landing / Hero Section (`components/Landing/`)**
+  - [x] Migrate hero layout, text stroke outline, and GSAP scale animations to Tailwind
+- [x] **Stage 5: Description / About Section (`components/Description/`)**
+  - [x] Migrate masked text reveal and responsive layout to Tailwind
+- [x] **Stage 6: Projects / Work Section (`components/Projects/`)**
+  - [x] `components/Projects/Project` (Row hover states & GitHub/live links in Tailwind)
+  - [x] `components/Projects` (Interactive modal preview & floating cursor follower in Tailwind)
+- [x] **Stage 7: Contact & Footer Section (`components/Contact/`)**
+  - [x] Migrate semicircular curve, CTA typography, resume download, and socials grid
+- [x] **Stage 8: Main Page & Final Cleanup (`app/`)**
+  - [x] Clean imports in `app/page.jsx`
+  - [x] Delete legacy `.module.scss` files
+  - [x] Run full build & lint verification

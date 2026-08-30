@@ -2,10 +2,11 @@
 
 /* Font-Face Declarations */
 /* Custom local variable fonts imported from /public/fonts */
+/* Both faces are referenced by the theme tokens below, so they are downloaded
+   and used. Each has a real fallback so text still renders if a file fails. */
 @font-face {
   font-family: 'CabinetGrotesk-Variable';
-  src: url('/fonts/CabinetGrotesk-Variable.ttf')
-    format('truetype');
+  src: url('/fonts/CabinetGrotesk-Variable.ttf') format('truetype');
   font-weight: 100 900;
   font-display: swap;
   font-style: normal;
@@ -13,119 +14,134 @@
 
 @font-face {
   font-family: 'GeneralSans-Variable';
-  src: url('/fonts/GeneralSans-Variable.ttf')
-    format('truetype');
+  src: url('/fonts/GeneralSans-Variable.ttf') format('truetype');
   font-weight: 200 700;
   font-display: swap;
   font-style: normal;
 }
 
 /* Static Design Tokens (@theme) */
-/* Fixed brand colors and typography — Tailwind auto-injects them into :root and creates utility classes */
+/* Fixed brand colors, typography, easing and keyframes — Tailwind injects them
+   into :root and generates the matching utility classes (bg-ink-900, ease-smooth,
+   animate-indicator-in, …). Only tokens actually referenced get emitted. */
 @theme {
-  /* Typography */
-  --font-sans:
-    'GeneralSans-Variable', sans-serif;
-  --font-cabinet:
-    'CabinetGrotesk-Variable',
-    sans-serif;
+  --font-sans: 'GeneralSans-Variable', sans-serif;
 
-  /* Dark Sections & Borders */
-  --color-dark: #1c1d20;
-  --color-border-light: rgba(
-    0,
-    0,
-    0,
-    0.1
-  );
+  /* The hero title deliberately uses the system grotesk rather than
+     CabinetGrotesk — wider letterforms, and no webfont for the LCP element.
+     The @font-face for CabinetGrotesk above is therefore unreferenced, and an
+     unreferenced @font-face is never downloaded, so it costs nothing to keep. */
+  --font-cabinet: sans-serif;
 
-  /* Grayscale / Neutrals */
-  --color-gray-100: #f2f2f2;
-  --color-gray-200: #e6e6e6;
-  --color-gray-300: #d9d9d9;
-  --color-gray-400: #666666;
-  --color-gray-500: #4d4d4d;
-  --color-gray-600: #262626;
+  /* Page ground and default text colour */
+  --color-background: #ffffff;
+  --color-foreground: #0e0e0e;
 
-  /* Accent Highlight */
-  --color-accent: #0066ff;
+  /* Dark surfaces: contact panel & preloader, drawer & dark buttons, drawer curve */
+  --color-ink-900: #141516;
+  --color-ink-800: #1c1d20;
+  --color-ink-700: #292929;
 
-  /* Warm Neutrals */
-  --color-warm-100: #fafaf9;
-  --color-warm-200: #e8e8e3;
-  --color-warm-300: #ddddd5;
-  --color-warm-400: #d1d1c7;
-  --color-warm-500: #aeae93;
-  --color-warm-600: #8c8c73;
-}
+  /* Hairlines, lightest to darkest */
+  --color-mist-200: #c9c9c9;
+  --color-mist-400: #999999;
+  --color-mist-500: #888888;
 
-/* (@theme inline) -> Dynamic Theme Connector */
-/* Tailwind doesn't automatically know about :root variables, so this bridges them to utility classes without duplicating :root entries */
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-}
+  /* Brand blue — the RoundedButton fill and the project cursor */
+  --color-accent: #455ce9;
 
-/* (:root) -> Global Runtime CSS Variables */
-/* Global custom properties and runtime values that adapt dynamically across themes and media queries */
-:root {
-  --background: #ffffff;
-  --foreground: #0e0e0e;
-}
+  /* The site's signature easing, shared by GSAP timelines and CSS transitions */
+  --ease-smooth: cubic-bezier(0.76, 0, 0.24, 1);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Mount animation for the active-link dot in the nav drawer */
+  --animate-indicator-in: indicator-in 0.2s ease-in-out;
+
+  @keyframes indicator-in {
+    from {
+      opacity: 0;
+      transform: translateY(-50%) scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
   }
 }
 
 /* (@utility) -> Custom Utility Classes */
-/* Single-purpose reusable CSS classes for specific styling tasks across components */
+/* Single-purpose reusable classes for effects Tailwind has no built-in for.
+   Declared with @utility (not plain CSS) so they land in the utilities layer and
+   stay overridable by variants like hover: and md:. */
+
+/* Outlined display type — pair with text-transparent (used by the hero title) */
 @utility text-stroke-2 {
-  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-width: 0.125rem;
 }
 
 @utility text-stroke-black {
   -webkit-text-stroke-color: #000000;
 }
 
-@utility no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  &::-webkit-scrollbar {
-    display: none;
+/* Hover underline that grows outward from the centre */
+@utility underline-sweep {
+  position: relative;
+
+  &::after {
+    content: '';
+    display: block;
+    position: relative;
+    left: 50%;
+    width: 0;
+    height: 1px;
+    margin-top: 0.125rem;
+    background-color: currentColor;
+    transform: translateX(-50%);
+    transition: width 0.2s linear;
+  }
+
+  /* Guarded so a tap on a touch device does not leave the underline stuck
+     open until the next tap elsewhere. */
+  @media (hover: hover) {
+    &:hover::after {
+      width: 100%;
+    }
   }
 }
 
 /* Base & Global Reset */
-/* Global layout defaults, body colors, text selection, and cross-browser scrollbar hiding */
-html,
-body,
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+/* Global layout defaults, text selection, and reduced-motion handling.
+   Kept inside @layer base so utility classes still win over it — Tailwind's
+   preflight already handles margin/padding/box-sizing, so no reset is needed. */
+@layer base {
+  /* `clip` rather than `hidden`: overflow on <body> only reaches the viewport
+     when <html> is visible, and Chrome still let the Contact semicircle
+     (-left-[10%] w-[120%]) scroll the page ~150px sideways. Clipping on the
+     root stops that for good, and unlike `hidden` it creates no scroll
+     container, so overflow-y stays visible and ScrollTrigger is unaffected. */
+  html {
+    overflow-x: clip;
+  }
 
-body {
-  background-color: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  overflow-x: hidden;
-}
+  body {
+    overflow-x: clip;
+  }
 
-::selection {
-  background-color: #0e0e0e;
-  color: #ffffff;
-}
+  ::selection {
+    background-color: var(--color-foreground);
+    color: var(--color-background);
+  }
 
-::-webkit-scrollbar {
-  display: none;
+  /* 4. Honour a reduced-motion preference globally. The JS-driven timelines
+     (GSAP / Framer) opt out separately in their components; this covers every
+     CSS transition and animation in one place. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
-
-* {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-

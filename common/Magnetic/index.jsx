@@ -1,12 +1,16 @@
 import React, { useEffect, useRef } from 'react';
+import { useReducedMotion } from 'framer-motion';
 import gsap from 'gsap';
 
 const Magnetic = ({ children }) => {
   const magnetic = useRef(null);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     const element = magnetic.current;
-    if (!element) return;
+    // Pure decoration — skip the pointer-follow entirely when motion is
+    // unwelcome. (Touch devices never fire mousemove, so they no-op already.)
+    if (!element || prefersReducedMotion) return;
 
     const xTo = gsap.quickTo(element, 'x', {
       duration: 1,
@@ -38,7 +42,7 @@ const Magnetic = ({ children }) => {
       element.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, []);
+  }, [prefersReducedMotion]);
 
   return React.cloneElement(children, { ref: magnetic });
 };

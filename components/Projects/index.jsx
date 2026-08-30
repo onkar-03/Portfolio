@@ -1,12 +1,11 @@
 'use client';
-import styles from './style.module.scss';
 import { useState, useEffect, useRef } from 'react';
-import Project from './Project/page';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import Image from 'next/image';
-import Rounded from '../../common/RoundedButton/page';
 import Link from 'next/link';
+import Project from './Project';
+import Rounded from '@/common/RoundedButton';
 
 const projects = [
   {
@@ -55,7 +54,10 @@ const scaleAnimation = {
   },
 };
 
-export default function Home() {
+const cursorBase =
+  'pointer-events-none fixed z-3 hidden h-20 w-20 items-center justify-center rounded-full text-sm font-light text-white md:flex';
+
+export default function Projects() {
   const [modal, setModal] = useState({ active: false, index: 0 });
   const { active, index } = modal;
   const modalContainer = useRef(null);
@@ -70,7 +72,6 @@ export default function Home() {
   let yMoveCursorLabel = useRef(null);
 
   useEffect(() => {
-    //Move Container
     xMoveContainer.current = gsap.quickTo(modalContainer.current, 'left', {
       duration: 0.8,
       ease: 'power3',
@@ -79,7 +80,6 @@ export default function Home() {
       duration: 0.8,
       ease: 'power3',
     });
-    //Move cursor
     xMoveCursor.current = gsap.quickTo(cursor.current, 'left', {
       duration: 0.5,
       ease: 'power3',
@@ -88,7 +88,6 @@ export default function Home() {
       duration: 0.5,
       ease: 'power3',
     });
-    //Move cursor label
     xMoveCursorLabel.current = gsap.quickTo(cursorLabel.current, 'left', {
       duration: 0.45,
       ease: 'power3',
@@ -107,6 +106,7 @@ export default function Home() {
     xMoveCursorLabel.current(x);
     yMoveCursorLabel.current(y);
   };
+
   const manageModal = (active, index, x, y) => {
     moveItems(x, y);
     setModal({ active, index });
@@ -114,28 +114,26 @@ export default function Home() {
 
   return (
     <main
-      onMouseMove={(e) => {
-        moveItems(e.clientX, e.clientY);
-      }}
-      className={styles.projects}
+      onMouseMove={(e) => moveItems(e.clientX, e.clientY)}
+      className='mx-auto mt-16 mb-[4.6875rem] flex w-full max-w-[100em] flex-col items-center px-5 md:px-[8vw] lg:mt-[6.25rem]'
     >
-      <div className={styles.container}>
-        <h5 className={styles.recentWork}> Recent Work</h5>
+      <div className='flex w-full pb-8'>
+        <h5 className='mb-4 w-[70%] text-[0.6em] leading-[1.065] font-[450] tracking-[0.05em] uppercase opacity-50 md:pl-[6vw]'>
+          Recent Work
+        </h5>
       </div>
 
-      <div className={styles.body}>
-        {projects.map((project, index) => {
-          return (
-            <Project
-              index={index}
-              title={project.title}
-              manageModal={manageModal}
-              key={index}
-              link={project.link}
-              github={project.github}
-            />
-          );
-        })}
+      <div className='mb-[3.125rem] flex w-full max-w-[87.5rem] flex-col items-center justify-center'>
+        {projects.map((project, index) => (
+          <Project
+            index={index}
+            title={project.title}
+            manageModal={manageModal}
+            key={project.title}
+            link={project.link}
+            github={project.github}
+          />
+        ))}
       </div>
 
       <Rounded>
@@ -156,54 +154,51 @@ export default function Home() {
         </Link>
       </Rounded>
 
-      <>
-        <motion.div
-          ref={modalContainer}
-          variants={scaleAnimation}
-          initial='initial'
-          animate={active ? 'enter' : 'closed'}
-          className={styles.modalContainer}
+      <motion.div
+        ref={modalContainer}
+        variants={scaleAnimation}
+        initial='initial'
+        animate={active ? 'enter' : 'closed'}
+        className='pointer-events-none fixed top-1/2 left-1/2 z-3 hidden h-[21.875rem] w-[25rem] overflow-hidden bg-white md:block'
+      >
+        <div
+          style={{ top: index * -100 + '%' }}
+          className='relative h-full w-full transition-[top] duration-500 ease-smooth'
         >
-          <div
-            style={{ top: index * -100 + '%' }}
-            className={styles.modalSlider}
-          >
-            {projects.map((project, index) => {
-              const { src, color } = project;
-              return (
-                <div
-                  className={styles.modal}
-                  style={{ backgroundColor: color }}
-                  key={`modal_${index}`}
-                >
-                  <Image
-                    src={`/images/${src}`}
-                    width={300}
-                    height={0}
-                    alt='image'
-                  />
-                </div>
-              );
-            })}
-          </div>
-        </motion.div>
-        <motion.div
-          ref={cursor}
-          className={styles.cursor}
-          variants={scaleAnimation}
-          initial='initial'
-          animate={active ? 'enter' : 'closed'}
-        ></motion.div>
-        <motion.div
-          ref={cursorLabel}
-          className={styles.cursorLabel}
-          variants={scaleAnimation}
-          initial='initial'
-          animate={active ? 'enter' : 'closed'}
-        >
-          View
-        </motion.div>
-      </>
+          {projects.map((project) => (
+            <div
+              className='flex h-full w-full items-center justify-center'
+              style={{ backgroundColor: project.color }}
+              key={project.title}
+            >
+              <Image
+                src={`/images/${project.src}`}
+                width={300}
+                height={0}
+                alt={project.title}
+                className='h-auto'
+              />
+            </div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div
+        ref={cursor}
+        className={`${cursorBase} bg-accent`}
+        variants={scaleAnimation}
+        initial='initial'
+        animate={active ? 'enter' : 'closed'}
+      />
+      <motion.div
+        ref={cursorLabel}
+        className={`${cursorBase} bg-transparent`}
+        variants={scaleAnimation}
+        initial='initial'
+        animate={active ? 'enter' : 'closed'}
+      >
+        View
+      </motion.div>
     </main>
   );
 }

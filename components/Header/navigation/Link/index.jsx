@@ -1,7 +1,6 @@
-import styles from './style.module.scss';
 import { motion } from 'framer-motion';
 import { slide } from '../../anim.js';
-import Magnetic from '../../../../common/Magnetic/page';
+import Magnetic from '@/common/Magnetic';
 
 const Index = ({ data, isActive, setActiveItem }) => {
   const handleClick = (e) => {
@@ -29,7 +28,7 @@ const Index = ({ data, isActive, setActiveItem }) => {
   return (
     <motion.div
       custom={data.index}
-      className={styles.link}
+      className='relative flex items-center py-2'
       variants={slide}
       initial='initial'
       animate='enter'
@@ -37,9 +36,15 @@ const Index = ({ data, isActive, setActiveItem }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {isActive && <div className={styles.indicator}></div>}
+      {isActive && (
+        <div className='absolute top-1/2 -left-[1.5625rem] h-2 w-2 -translate-y-1/2 animate-indicator-in rounded-full bg-white' />
+      )}
       <Magnetic>
-        <a href={data.href} onClick={handleClick}>
+        <a
+          href={data.href}
+          onClick={handleClick}
+          className='text-[2.25rem] font-light transition-colors duration-200 hover:text-white/80 sm:text-[3.5rem]'
+        >
           {data.title}
         </a>
       </Magnetic>

@@ -7,16 +7,14 @@
     "nrd": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "framer-motion": "^12.19.2",
     "gsap": "^3.13.0",
-    "locomotive-scroll": "^4.1.4",
     "next": "^16.0.10",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "sass": "^1.89.2"
+    "react-dom": "^19.2.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
