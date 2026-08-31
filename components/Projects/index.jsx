@@ -139,6 +139,7 @@ export default function Projects() {
       <Rounded>
         <Link
           href='#contact'
+          className='font-medium'
           onClick={(e) => {
             e.preventDefault();
             const contactSection = document.getElementById('contact');

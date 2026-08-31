@@ -112,7 +112,7 @@ const Contact = () => {
               backgroundColor='#334BD3'
               className='relative mx-auto h-[7.5rem] w-[7.5rem] rounded-full bg-accent text-white sm:h-[11.25rem] sm:w-[11.25rem] lg:mx-0'
             >
-              <p className='text-sm font-light sm:text-base'>Get in touch</p>
+              <p className='text-sm font-medium sm:text-base'>Get in touch</p>
             </Rounded>
           </motion.div>
 

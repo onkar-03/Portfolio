@@ -144,7 +144,7 @@ export default function Header() {
     <>
       <div
         ref={header}
-        className='absolute top-0 z-1 flex w-full items-center justify-between px-5 pt-9 pb-5 font-normal text-black md:p-[2.1875rem] md:pt-[2.1875rem]'
+        className='absolute top-0 z-1 flex w-full items-center justify-between px-5 pt-9 pb-5 font-light text-black md:p-[2.1875rem] md:pt-[2.1875rem]'
         style={{ opacity: 0, transform: 'translateY(-100px)' }} // hide before GSAP runs
       >
         <Magnetic>
